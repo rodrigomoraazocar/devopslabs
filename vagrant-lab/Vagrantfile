@@ -1,0 +1,35 @@
+# Configura Vagrant usando la sintaxis de configuración de la versión 2.
+Vagrant.configure("2") do |config|
+
+  # Especifica la caja (box) que se va a usar. En este caso, es Ubuntu Bionic 64-bit.
+  config.vm.box = "ubuntu/bionic64"
+  
+  # Establece el nombre de host para la máquina virtual. Aquí se llama "ubuntu".
+  config.vm.hostname = "ubuntu" # Nombre de host válido
+
+  # Configura el reenvío de puertos. El puerto 80 en la máquina virtual (guest)
+  # se mapea al puerto 8080 en la máquina host (tu PC), y se accede desde la IP 127.0.0.1.
+  config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+
+  # Provisión de la máquina usando un script de shell. Ejecuta el archivo provision.sh 
+  # para instalar y configurar cosas como Apache, archivos, etc.
+  config.vm.provision "shell", path: "provision.sh"
+
+  # La línea siguiente está comentada. Si estuviera activa, configuraría un 
+  # tiempo de espera de 600 segundos (10 minutos) para que la máquina arranque.
+  # Esto es útil si la máquina tarda más en iniciarse.
+  # config.vm.boot_timeout = 600 # Aumentar el tiempo de espera
+
+  # Configuraciones específicas para el proveedor "virtualbox" (la plataforma de virtualización que usarás).
+  config.vm.provider "virtualbox" do |vb|
+
+    # Establece la cantidad de memoria RAM asignada a la máquina virtual, aquí 1024 MB (1 GB).
+    vb.memory = "1024"
+
+    # Establece la cantidad de CPUs asignadas a la máquina virtual, aquí 2 CPUs.
+    vb.cpus = 2
+
+    # Establece el nombre visible en VirtualBox para la máquina virtual, que será "Ubuntu-64-bits".
+    vb.name = "Ubuntu-64-bits"
+  end
+end
